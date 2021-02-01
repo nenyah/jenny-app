@@ -4,24 +4,22 @@ import {
   Module,
   Mutation,
   VuexModule,
-} from "vuex-module-decorators"
-import store from "@/store"
-import api from "@/api"
-import { User } from "@/common/interface"
-import { token } from "@/utils/token"
+} from 'vuex-module-decorators'
+import store from '@/store'
+import api from '@/api'
+import { User } from '@/common/interface'
+import { token } from '@/utils/token'
 
 @Module({
-  name: "user",
+  name: 'user',
   dynamic: true,
   namespaced: true,
   store,
 })
 export default class UserStore extends VuexModule {
   public loginInfo: User = {
-    token: "",
-    openId: "",
-    unionId: "",
-    wasBuy: false,
+    token: '',
+    openId: '',
   }
 
   @Mutation
@@ -33,20 +31,18 @@ export default class UserStore extends VuexModule {
   @Action
   async getUserinfo() {
     const [err, res]: any = await uni.login({
-      provider: "weixin",
+      provider: 'weixin',
     })
-    console.log("用户登录:::", res)
-    const { openId, token: token1, unionId, wasBuy } = await api.user
+    console.log('用户登录:::', res)
+    const { openId, token: token1 } = await api.user
       .wxMaLogin(res.code)
       .catch((err: any) => {
-        console.log("获取用户信息错误", err)
+        console.log('获取用户信息错误', err)
       })
     token.set(token1)
-    this.context.commit("USERINFO", {
+    this.context.commit('USERINFO', {
       token: token1,
       openId,
-      unionId,
-      wasBuy,
     })
   }
 }
