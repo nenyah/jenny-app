@@ -17,16 +17,35 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
+import Vue from "vue";
 export default Vue.extend({
   data() {
     return {
       title: "Hello",
-    }
+    };
   },
-  onLoad() {},
+  onLoad() {
+    uni.login({
+      success(res) {
+        console.log(res);
+        uni.request({
+          url: "http://127.0.0.1:8000/api/login/",
+          method: "POST",
+          data: {
+            code: res["code"],
+          },
+          success(res) {
+            console.log("服务器返回结果", res);
+          },
+        });
+      },
+      fail(err) {
+        console.log(err);
+      },
+    });
+  },
   methods: {},
-})
+});
 </script>
 
 <style>
